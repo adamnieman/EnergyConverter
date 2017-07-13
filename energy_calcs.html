@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<!--<link rel="stylesheet" href="TangleKit/font-awesome.css" />-->
+    
+	
+	
+    <title>Energy Fun</title>
+
+    <!-- Tangle -->
+    <script type="text/javascript" src="Tangle.js"></script>
+
+    <!-- TangleKit (optional) -->
+    <link rel="stylesheet" href="TangleKit/TangleKit.css" type="text/css">
+    <link rel="stylesheet" href="TangleKit/font-awesome.css" />
+    <script type="text/javascript" src="TangleKit/mootools.js"></script>
+    <script type="text/javascript" src="TangleKit/sprintf.js"></script>
+    <script type="text/javascript" src="TangleKit/BVTouchable.js"></script>
+    <script type="text/javascript" src="TangleKit/TangleKit.js"></script>
+	
+	<style type="text/css">
+	
+	h1 {font: 20px; }
+	h2 {font: 16px; }
+	h3 {font: 14px; }
+	p { font: 10px; }
+	div {width: 600px; margin-left:auto; margin-right:auto;}
+	.outputnumber {font-family: sans-serif; color: #c8102e; font-weight:bold;}
+	html {font-family: sans-serif;}
+	</style>
+
+    <!-- example -->
+    <script type="text/javascript">
+	
+
+		function niceNums(num, sig) {
+			var num = num.toFixed(sig);
+			var parts = num.toString().split(".");
+		    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		    return parts.join(".");
+		}
+
+        function setUpTangle () {
+
+            var element = document.getElementById("calcs");
+
+            var tangle = new Tangle(element, {
+                initialize: function () {
+					this.seconds_per_year = 31556925.9936;
+					this.kWh_MJ = 3.6;
+					this.kcal_J = 4184;
+					this.kcal_kWh = this.kWh_MJ / (1000 * this.kcal_J);
+					this.g = 9.8;
+					this.car_litres_100km = 5.8;
+					this.petrol_MJ_litre = 32.16215489;
+					this.H2O_joules_litre_deg = 4180;
+					this.ambient_temp_C = 20;
+					this.ambient_temp_C_input = 20;
+					this.bulb_incandescent_W = 60;
+					this.bulb_LED_W = 7;
+					this.person_weight_kg = 80;
+					this.AA_battery_Wh = 2.6;
+					this.AC_energy_2013_kWh = 439849848;
+					this.men_rec_intake_kJ = 10500;
+					this.women_rec_intake_kJ = 8400;
+					this.kWh_input = 1;
+					this.appliance_input_W = 2000;
+					this.ref_mass_kg_input = 1000;
+					this.home_Sweden_kWh = 8264;
+					this.home_UK_kWh = 3938;
+					this.home_EU_kWh = 3888;
+					this.home_US_kWh = 11789;
+					this.home_China_kWh = 1308;
+					this.home_SouthAfrica_kWh = 4380;
+					this.home_Africa_kWh = 2011;
+					this.home_SouthAmerica_kWh = 2081;
+					this.home_Asia_kWh = 1631;
+					this.home_Australia_kWh = 6911;
+					this.home_MiddleEast_kWh = 9093;
+					this.home_India_kWh = 778;
+                },
+				
+                update: function () {
+					this.petrol_litres = (this.kWh_input * this.kWh_MJ) / this.petrol_MJ_litre;
+					this.petrol_gallons = this.petrol_litres * 0.264172052;
+					this.AAs = 1000 * this.kWh_input / this.AA_battery_Wh;
+					this.AAs_nice = niceNums(this.AAs, 0);
+					this.km_driving = 100 * this.petrol_litres / this.car_litres_100km;
+					this.km_driving_nice = niceNums(this.km_driving,1);
+					this.mi_driving = this.km_driving * 0.621371192;
+					this.mi_driving_nice = niceNums(this.mi_driving,1);
+					this.litres_H2O = 1000000 * this.kWh_input * this.kWh_MJ / ( (100 - this.ambient_temp_C_input)* this.H2O_joules_litre_deg);
+					this.litres_H2O_nice = niceNums(this.litres_H2O, 1);
+					this.pints_H2O = this.litres_H2O * 2.113376419;
+					this.pints_H2O_nice = niceNums(this.pints_H2O, 1);
+					this.ambient_temp_F_input = 32 + ( this.ambient_temp_C_input * (9/5) );
+					this.bulbs_incandescent = 1000 * this.kWh_input / this.bulb_incandescent_W;
+					this.bulbs_incandescent_nice = niceNums(this.bulbs_incandescent, 0);
+					this.bulbs_LED = 1000 * this.kWh_input /   this.bulb_LED_W;
+					this.bulbs_LED_nice = niceNums(this.bulbs_LED, 0);
+				
+					
+					this.appliance_time_hours =  (1000 * this.kWh_input) / this.appliance_input_W;
+					this.mass_height_m = 1000000 * this.kWh_input * this.kWh_MJ / (this.ref_mass_kg_input * this.g);
+					this.mass_height_ft = this.mass_height_m * 3.280839895;
+					this.ref_mass_lb = this.ref_mass_kg_input * 2.2046226218;
+					this.AC_power_secs = this.seconds_per_year * this.kWh_input / this.AC_energy_2013_kWh;
+					this.man_hours = 1000 * this.kWh_input * this.kWh_MJ / (this.men_rec_intake_kJ / 24);
+					this.woman_hours = 1000 * this.kWh_input * this.kWh_MJ / (this.women_rec_intake_kJ / 24);
+					this.home_UK_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_UK_kWh);
+					this.home_Sweden_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_Sweden_kWh);
+					this.home_EU_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_EU_kWh);
+					this.home_US_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_US_kWh);
+					this.home_China_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_China_kWh);
+					this.home_Africa_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_Africa_kWh);
+					this.home_India_hours = (this.seconds_per_year / 3600) * (this.kWh_input / this.home_India_kWh);
+                },
+
+            });
+        }
+
+    </script>
+</head>
+
+
+<body onload="setUpTangle();">
+	<div 
+    width = "500px" 
+    class="container"
+>
+		<h1 style="color:#0099CC">How much is that?  </h1><h2>Interactive energy comparison </h2>
+		<span id="calcs">
+		<p>Energy is the resource we understand least. It is hard to develop a feel for how much energy we use, and how much we could save. Energy is measured in kilowatt-hours. How much work could you do with <span data-var="kWh_input"></span> kilowatt-hours (kWh) of energy?
+        
+        	
+        
+        </p>
+        
+  
+		
+        
+       
+        
+      
+		
+		<h3><span data-var="kWh_input" class="TKAdjustableNumber" data-min="1" data-max="10000000"> kWh</span> (drag to adjust) is the energy stored in:</h3>
+        
+ 
+        
+		
+	<ul class="fa-ul" style='line-height:1.8em '>
+	
+    <li><i class="fa-li fa fa-flask fa-lg"> </i><span class="outputnumber" data-var="petrol_litres" data-format="%.2f"></span> litres of petrol/gasoline (<span class="outputnumber" data-var="petrol_gallons" data-format="%.2f"></span> US galons)</li>
+	<li><i class="fa-li fa fa-dot-circle-o fa-lg"></i><span class="outputnumber" data-var="AAs_nice"></span> AA sized long-life alkaline batteries</li>
+	</ul>
+	
+	<h3>With <span data-var="kWh_input"></span> kWh of energy you could:</h3>
+	
+    <ul class="fa-ul" style='line-height:1.8em'>
+    
+	<li><i class="fa-li fa fa-car "></i>Drive <span class="outputnumber" data-var="km_driving_nice"></span> km (<span class="outputnumber" data-var="mi_driving_nice"></span> miles)<sup>*</sup></li>
+	
+    <li><i class="fa-li fa fa-tint fa-lg"> </i>Bring <span class="outputnumber" data-var="litres_H2O_nice"></span> litres of water (<span class="outputnumber" data-var="pints_H2O_nice"></span> US pints) to the boil from an initial temperature of <span data-var="ambient_temp_C_input" class="TKAdjustableNumber" data-min="0" data-max="100">&nbsp;&deg;C (<span data-var="ambient_temp_F_input" data-format="%.0f"></span>&nbsp;&deg;F)</span></li>
+	<li><i class="fa-li fa fa-lightbulb-o fa-lg"></i> Power <span class="outputnumber" data-var="bulbs_incandescent_nice"></span> standard lightbulbs for one hour (60 W incandescent)</li>
+	<li><i class="fa-li fa fa-lightbulb-o fa-lg"> </i> Power <span class="outputnumber" data-var="bulbs_LED_nice"></span> LED lightbulbs for one hour  
+    </li>
+	<li><i class="fa-li fa fa-clock-o fa-lg"> </i>Dry your hair for <span class="outputnumber" data-var="appliance_time_hours" data-format="%.1f"></span> hours (with a <span data-var="appliance_input_W" class="TKAdjustableNumber" data-min="500" data-max="2500" data-step="100">&nbsp;Watt</span> hair dryer) </li>
+	<li><i class="fa-li fa fa-dot-circle-o fa-lg"> </i>Lift a weight of <span data-var="ref_mass_kg_input" class="TKAdjustableNumber" data-min="1" data-max="250000" data-step="5">&nbsp;kg (<span data-var="ref_mass_lb"data-format="%.0f"></span>&nbsp;lb) </span><span class="outputnumber" data-var="mass_height_m" data-format="%.0f"></span> metres (<span class="outputnumber" data-var="mass_height_ft" data-format="%.0f"></span>&nbsp;feet)</li>
+</ul>
+	
+	<h3>As food energy<sup>**</sup>, <span data-var="kWh_input"></span> kWh could:</h3>
+	
+    <ul class="fa-ul" style='line-height:1.8em'>
+    
+	<li><i class="fa-li fa fa-male fa-lg"> </i>Power an adult man for <span class="outputnumber" data-var="man_hours" data-format="%.0f"></span> hours</li>
+	<li><i class="fa-li fa fa-female fa-lg"> </i>Power an adult woman for <span class="outputnumber" data-var="woman_hours" data-format="%.0f"></span> hours
+    </li>
+	</ul>
+	
+	<h3><span data-var="kWh_input"></span> kWh is the electricity<sup>***</sup> used by an average home in:</h3>
+	<ul class="fa-ul" style='line-height:1.8em'>
+   
+    <li><i class="fa-li fa fa-globe fa-lg"> </i>The UK <span class="outputnumber" data-var="home_UK_hours" data-format="%.1f"></span> hours</li>
+	
+	<li><i class="fa-li fa fa-globe fa-lg"> </i>The European Union every <span class="outputnumber" data-var="home_EU_hours" data-format="%.1f"></span> hours</li>
+    
+	<li><i class="fa-li fa fa-globe fa-lg"> </i>United States every <span class="outputnumber" data-var="home_US_hours" data-format="%.1f"></span> hours</li>
+    
+	<li><i class="fa-li fa fa-globe fa-lg"> </i>Africa every <span class="outputnumber" data-var="home_Africa_hours" data-format="%.1f"></span> hours</li>
+    
+	<li><i class="fa-li fa fa-globe fa-lg"> </i>China every <span class="outputnumber" data-var="home_China_hours" data-format="%.1f"></span> hours</li>
+    
+	<li><i class="fa-li fa fa-globe fa-lg"> </i>India every <span class="outputnumber" data-var="home_India_hours" data-format="%.1f"></span> hours</li>
+	</ul>
+	
+	<p>* Based on fuel economy of an average UK car in 2012: 5.8 litres/100km</p>
+	<p>** Based on a recommended daily intake of 10,500 kJ (2,500 calories) for men and 8,400 kJ (2,000 calories) for women</p>
+	<p>*** UK: 2015 <a href="https://www.gov.uk/government/statistics/energy-consumption-in-the-uk">Energy Consumption in the UK (2016 update)</a>
+	<br>Non-UK: 2011 - Average electricity consumption per electrified household (Source: Enerdata via World Energy Council).
+	
+
+</span>
+</div>
+
+</body>
+</html>

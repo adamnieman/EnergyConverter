@@ -1,0 +1,50 @@
+/*
+ *  TangleKit.css
+ *  Tangle 0.1.0
+ *
+ *  Created by Bret Victor on 6/10/11.
+ *  (c) 2011 Bret Victor.  MIT open-source license.
+ *
+ */
+
+
+/* cursor */
+
+.TKCursorDragHorizontal {
+	cursor: pointer;
+	cursor: move;
+	cursor: col-resize;
+}
+
+
+/* TKToggle */
+
+.TKToggle {
+	color: #0099CC;
+	border-bottom: 1px dashed #46f;
+	cursor: pointer;
+}
+
+
+/* TKAdjustableNumber */
+
+.TKAdjustableNumber {
+	position:relative;
+	color: #0099CC;
+	border-bottom: 1px dashed #0099CC;
+}
+
+.TKAdjustableNumberHover {
+}
+
+.TKAdjustableNumberDown {
+	color: #6E6E78;
+	border-bottom: 1px dashed #6E6E78;
+}
+
+.TKAdjustableNumberHelp {
+	position:absolute;
+	color: #0099CC;
+	font: 9px "Helvetica-Neue", "Arial", sans-serif;
+}
+
